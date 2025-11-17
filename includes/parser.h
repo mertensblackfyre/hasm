@@ -41,10 +41,6 @@ C_Instruction Parser::parse_C__(const std::string &line) {
   } else {
     ins.comp = line;
   };
-
-  std::cout << ins.dest << std::endl;
-  std::cout << ins.comp << std::endl;
-  std::cout << ins.jump << std::endl;
   return ins;
 };
 

@@ -2,9 +2,43 @@
 #include "includes/parser.h"
 #include "includes/translate.h"
 #include <fstream>
-#include <iostream> // For console output
-#include <string>   // For reading lines into a string
+#include <iostream>
+#include <string>
 
+
+void removeTrailingNewline(const std::string& filename) {
+    std::ifstream inFile(filename);
+    if (!inFile.is_open()) {
+        std::cerr << "Error opening file for reading: " << filename << std::endl;
+        return;
+    }
+
+    std::string content;
+    std::string line;
+    while (std::getline(inFile, line)) {
+        content += line + "\n"; // Re-add newline characters as they were removed by getline
+    }
+    inFile.close();
+
+    // Check and remove the trailing newline
+    if (!content.empty()) {
+        if (content.back() == '\n') {
+            content.pop_back(); // Remove the last character (newline)
+            if (!content.empty() && content.back() == '\r') {
+                content.pop_back(); // Remove carriage return if present
+            }
+        }
+    }
+
+    std::ofstream outFile(filename, std::ios::trunc); // Open in truncate mode to clear content
+    if (!outFile.is_open()) {
+        std::cerr << "Error opening file for writing: " << filename << std::endl;
+        return;
+    }
+
+    outFile << content;
+    outFile.close();
+}
 int main() {
 
   Parser parse;
@@ -24,10 +58,14 @@ int main() {
       continue;
     } else if (line[0] == '@') {
       std::string final_output = t.translate_a_instruc(line);
-      // helper_append_file(final_output);
+      helper_append_file(final_output);
     } else {
-      parse.parse_C__(line);
+      C_Instruction m = parse.parse_C__(line);
+      std::string final_output = t.translate_c_instruc(m);
+      helper_append_file(final_output);
     };
   };
+
+  removeTrailingNewline("final.hack");
   return 0;
 }

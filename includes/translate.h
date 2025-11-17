@@ -37,9 +37,22 @@ Translate::translate_c_instruc(const C_Instruction &parsed_strings) {
       helper_find_value(parsed_strings.jump, JUMP_TABLE);
 
   if (comp_binary_value == "0") {
-  
-     // final_output
-  };
+    final_output += "0000000";
+  } else {
+    final_output += comp_binary_value;
+  }
+
+  if (dest_binary_value == "0") {
+    final_output += "000";
+  } else {
+    final_output += dest_binary_value;
+  }
+
+  if (jump_binary_value == "0") {
+    final_output += "000";
+  } else {
+    final_output += jump_binary_value;
+  }
 
   return final_output;
 };
