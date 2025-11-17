@@ -14,7 +14,6 @@ struct C_Instruction {
 
 class Parser {
 public:
-  inline static std::unordered_map<std::string, int> VARIABLE_TABLE = {};
   inline static std::unordered_map<std::string, std::string> SYMBOL_TABLE = {
       {"R0", "0"},         {"R1", "1"},      {"R2", "2"},   {"R3", "3"},
       {"R4", "4"},         {"R5", "5"},      {"R6", "6"},   {"R7", "7"},
@@ -23,33 +22,59 @@ public:
       {"SCREEN", "16384"}, {"KBD", "24576"}, {"SP", "0"},   {"LCL", "1"},
       {"ARG", "2"},        {"THIS", "3"},    {"THAT", "4"},
   };
-  inline void parse_first_pass(const std::string &fname);
+  inline void parse_pass(const std::string &fname);
   static inline std::string parse_A__(const std::string &line);
   static inline C_Instruction parse_C__(const std::string &line);
 
 private:
-  int counter = 0;
+  inline static int counter = 0;
+  inline static int memory_counter = 16;
 };
 
-void Parser::parse_first_pass(const std::string &fname) {
+void Parser::parse_pass(const std::string &fname) {
   std::string line;
 
-  counter++;
   std::ifstream inputFile(fname);
   if (!inputFile.is_open()) {
     std::cerr << "Error opening file!" << std::endl;
   }
 
+  // First Pass
   while (std::getline(inputFile, line)) {
     if (line.size() < 1) {
       continue;
     } else if (line[0] == '/') {
       continue;
     } else if (line[0] == '@') {
-      //    std::string final_output = t.translate_a_instruc(line);
-      //  helper_append_file(final_output);
+      std::string a_ins = parse_A__(line);
+      if (!SYMBOL_TABLE.count(a_ins)) {
+        SYMBOL_TABLE[a_ins] = std::to_string(counter);
+      };
+      counter++;
+    } else {
+      counter++;
     }
   };
+
+  // Second Pass
+  while (std::getline(inputFile, line)) {
+    if (line.size() < 1) {
+      continue;
+    } else if (line[0] == '/') {
+      continue;
+    } else if (line[0] == '@') {
+      std::string a_ins = parse_A__(line);
+      std::cout << a_ins << std::endl;
+      if (!SYMBOL_TABLE.count(a_ins)) {
+
+        std::cout << memory_counter << std::endl;
+        SYMBOL_TABLE[a_ins] = std::to_string(memory_counter);
+        memory_counter++;
+      };
+    }
+  };
+
+        std::cout << "HELLo" << std::endl;
 };
 
 std::string Parser::parse_A__(const std::string &line) {
