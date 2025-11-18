@@ -22,7 +22,10 @@ public:
       {"SCREEN", "16384"}, {"KBD", "24576"}, {"SP", "0"},   {"LCL", "1"},
       {"ARG", "2"},        {"THIS", "3"},    {"THAT", "4"},
   };
-  inline void parse_pass(const std::string &fname);
+
+  inline void parse_symbols(const std::string &fname);
+
+  inline void parse_variables(const std::string &fname);
   static inline std::string parse_A__(const std::string &line);
   static inline C_Instruction parse_C__(const std::string &line);
 
@@ -31,7 +34,11 @@ private:
   inline static int memory_counter = 16;
 };
 
-void Parser::parse_pass(const std::string &fname) {
+std::string Parser::parse_A__(const std::string &line) {
+  return line.substr(1, line.size());
+};
+
+void Parser::parse_symbols(const std::string &fname) {
   std::string line;
 
   std::ifstream inputFile(fname);
@@ -39,7 +46,6 @@ void Parser::parse_pass(const std::string &fname) {
     std::cerr << "Error opening file!" << std::endl;
   }
 
-  // First Pass
   while (std::getline(inputFile, line)) {
     if (line.size() < 1) {
       continue;
@@ -47,38 +53,38 @@ void Parser::parse_pass(const std::string &fname) {
       continue;
     } else if (line[0] == '@') {
       std::string a_ins = parse_A__(line);
-      if (!SYMBOL_TABLE.count(a_ins)) {
-        SYMBOL_TABLE[a_ins] = std::to_string(counter);
-      };
-      counter++;
+      if (a_ins == "LOOP" || a_ins == "END" || a_ins == "STOP") {
+        if (!SYMBOL_TABLE.count(a_ins)) {
+          SYMBOL_TABLE[a_ins] = std::to_string(counter);
+        };
+        counter++;
+      }
     } else {
       counter++;
     }
   };
 
-  // Second Pass
-  while (std::getline(inputFile, line)) {
-    if (line.size() < 1) {
-      continue;
-    } else if (line[0] == '/') {
-      continue;
-    } else if (line[0] == '@') {
-      std::string a_ins = parse_A__(line);
-      std::cout << a_ins << std::endl;
-      if (!SYMBOL_TABLE.count(a_ins)) {
+  inputFile.close();
+};
 
-        std::cout << memory_counter << std::endl;
+void Parser::parse_variables(const std::string &fname) {
+  std::string line;
+  std::ifstream inputFile(fname);
+
+  if (!inputFile.is_open()) {
+    std::cerr << "Error opening file!" << std::endl;
+  }
+  while (std::getline(inputFile, line)) {
+    if (line[0] == '@') {
+      std::string a_ins = parse_A__(line);
+      if (!SYMBOL_TABLE.count(a_ins)) {
         SYMBOL_TABLE[a_ins] = std::to_string(memory_counter);
         memory_counter++;
       };
     }
   };
 
-        std::cout << "HELLo" << std::endl;
-};
-
-std::string Parser::parse_A__(const std::string &line) {
-  return line.substr(1, line.size());
+  inputFile.close();
 };
 
 C_Instruction Parser::parse_C__(const std::string &line) {

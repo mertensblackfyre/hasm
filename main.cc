@@ -53,11 +53,10 @@ int main() {
     return 1;
   }
 
-  parse.parse_pass("sum.asm");
-
+  parse.parse_symbols("sum.asm");
+  parse.parse_variables("sum.asm");
   for (auto it : parse.SYMBOL_TABLE) {
-  
-  //    std::cout << "(SYM) "<< it.first << " [Val] " << it.second << std::endl;
+    std::cout << "(SYM) " << it.first << " [Val] " << it.second << std::endl;
   }
   /*
   while (std::getline(inputFile, line)) {
@@ -79,5 +78,7 @@ int main() {
 
   removeTrailingNewline("final.hack");
   */
+
+  inputFile.close();
   return 0;
 }
