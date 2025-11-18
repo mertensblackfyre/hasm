@@ -24,8 +24,9 @@ public:
   };
 
   inline void parse_symbols(const std::string &fname);
-
   inline void parse_variables(const std::string &fname);
+
+  static inline std::string parse_instructions(const std::string &line);
   static inline std::string parse_A__(const std::string &line);
   static inline C_Instruction parse_C__(const std::string &line);
 
@@ -34,8 +35,13 @@ private:
   inline static int memory_counter = 16;
 };
 
+std::string Parser::parse_instructions(const std::string &line) {
+
+};
+
 std::string Parser::parse_A__(const std::string &line) {
-  return line.substr(1, line.size());
+  std::size_t found = line.find_first_of(" \t\n\r");
+  return line.substr(1, found);
 };
 
 void Parser::parse_symbols(const std::string &fname) {
@@ -47,9 +53,8 @@ void Parser::parse_symbols(const std::string &fname) {
   }
 
   while (std::getline(inputFile, line)) {
-    if (line.size() < 1) {
-      continue;
-    } else if (line[0] == '/') {
+
+    if (line.size() < 1 || line[0] == '/' || line[0] == '(') {
       continue;
     } else if (line[0] == '@') {
       std::string a_ins = parse_A__(line);
@@ -88,9 +93,7 @@ void Parser::parse_variables(const std::string &fname) {
 };
 
 C_Instruction Parser::parse_C__(const std::string &line) {
-
   C_Instruction ins{"", "", ""};
-
   int equal_pos = helper_delimiter_pos(line, '=');
   int semicolon_pos = helper_delimiter_pos(line, ';');
 
@@ -107,6 +110,10 @@ C_Instruction Parser::parse_C__(const std::string &line) {
   } else {
     ins.comp = line;
   };
+
+  std::cout << ins.comp << " ";
+  std::cout << ins.dest << " ";
+  std::cout << ins.jump << std::endl;
   return ins;
 };
 

@@ -47,7 +47,7 @@ int main() {
   Translate t;
   std::string line;
 
-  std::ifstream inputFile("m.asm");
+  std::ifstream inputFile("sum.asm");
   if (!inputFile.is_open()) {
     std::cerr << "Error opening file!" << std::endl;
     return 1;
@@ -55,14 +55,9 @@ int main() {
 
   parse.parse_symbols("sum.asm");
   parse.parse_variables("sum.asm");
-  for (auto it : parse.SYMBOL_TABLE) {
-    std::cout << "(SYM) " << it.first << " [Val] " << it.second << std::endl;
-  }
-  /*
+
   while (std::getline(inputFile, line)) {
-    if (line.size() < 1) {
-      continue;
-    } else if (line[0] == '/') {
+    if (line.size() < 1 || line[0] == '/' || line[0] == '(') {
       continue;
     } else if (line[0] == '@') {
       std::string final_output = t.translate_a_instruc(line);
@@ -74,10 +69,7 @@ int main() {
     };
   };
 
-
-
   removeTrailingNewline("final.hack");
-  */
 
   inputFile.close();
   return 0;
