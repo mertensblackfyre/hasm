@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(MyProject LANGUAGES C CXX)
+project(hasm LANGUAGES C CXX)
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 20)
@@ -16,5 +16,5 @@ set(SOURCES
 )
 
 # Create executable
-add_executable(MyProject ${SOURCES})
+add_executable(hasm ${SOURCES})
 
