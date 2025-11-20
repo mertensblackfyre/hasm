@@ -4,6 +4,39 @@
 #include <iostream>
 #include <string>
 
+void helper_remove_trailing_newline(const std::string &filename) {
+  std::ifstream inFile(filename);
+  if (!inFile.is_open()) {
+    std::cerr << "Error opening file for reading: " << filename << std::endl;
+    return;
+  }
+
+  std::string content;
+  std::string line;
+  while (std::getline(inFile, line)) {
+    content += line + "\n";
+  }
+  inFile.close();
+
+  if (!content.empty()) {
+    if (content.back() == '\n') {
+      content.pop_back();
+      if (!content.empty() && content.back() == '\r') {
+        content.pop_back();
+      }
+    }
+  }
+
+  std::ofstream outFile(filename, std::ios::trunc);
+  if (!outFile.is_open()) {
+    std::cerr << "Error opening file for writing: " << filename << std::endl;
+    return;
+  }
+
+  outFile << content;
+  outFile.close();
+}
+
 int helper_string_int(std::string string) {
 
   int num = 0;
