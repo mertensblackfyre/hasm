@@ -44,11 +44,12 @@ std::string Parser::parse_instruction(const std::string &line) {
     if (!std::isspace(ch) && ch != '/')
       parsed_string += ch;
   };
+
   return parsed_string;
 };
 
 std::string Parser::parse_A_instruction(const std::string &line) {
-  if (line.size() <= 1) {
+  if (line.size() < 1) {
     return "";
   }
   return line.substr(1, line.size() - 1);
@@ -68,11 +69,9 @@ void Parser::parse_symbols(const std::string &fname) {
     } else if (line[0] == '(') {
       std::string a_ins = parse_instruction(line);
       a_ins = a_ins.substr(1, a_ins.size() - 2);
-      if (a_ins == "LOOP" || a_ins == "END" || a_ins == "STOP") {
         if (!SYMBOL_TABLE.count(a_ins)) {
           SYMBOL_TABLE[a_ins] = std::to_string(counter);
         };
-      }
     } else {
       counter++;
     }
@@ -90,6 +89,7 @@ void Parser::parse_variables(const std::string &fname) {
   while (std::getline(inputFile, line)) {
     if (line[0] == '@') {
       std::string a_ins = parse_A_instruction(parse_instruction(line));
+
       if (!SYMBOL_TABLE.count(a_ins)) {
         SYMBOL_TABLE[a_ins] = std::to_string(memory_counter);
         memory_counter++;

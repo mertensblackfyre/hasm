@@ -4,6 +4,8 @@
 TEST(Translate, A_Instructions) {
   EXPECT_EQ(Translate::translate_a_instruc("@15"), "0000000000001111");
   EXPECT_EQ(Translate::translate_a_instruc("@1"), "0000000000000001");
+  EXPECT_EQ(Translate::translate_a_instruc("@32"), "0000000000100000");
+  EXPECT_EQ(Translate::translate_a_instruc("@99"), "0000000001100011");
 
   // Rs
   EXPECT_EQ(Translate::translate_a_instruc("@R0"), "0000000000000000");
@@ -32,4 +34,3 @@ TEST(Translate, A_Instructions) {
   EXPECT_EQ(Translate::translate_a_instruc("@THIS"), "0000000000000011");
   EXPECT_EQ(Translate::translate_a_instruc("@THAT"), "0000000000000100");
 }
-

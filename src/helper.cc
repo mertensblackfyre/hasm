@@ -2,7 +2,15 @@
 #include <bitset>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <string>
+
+bool helper_is_number(const std::string &string) {
+  std::stringstream ss(string);
+  double value;
+  ss >> value;
+  return ss.eof() && !ss.fail();
+}
 
 void helper_remove_trailing_newline(const std::string &filename) {
   std::ifstream inFile(filename);
@@ -56,9 +64,9 @@ std::string helper_decimal_string(int decimal) {
   return binary.to_string();
 };
 
-void helper_append_file(std::string binary) {
+void helper_append_file(std::string binary, const std::string &filename) {
   std::ofstream outputFile;
-  outputFile.open("final.hack", std::ios::app);
+  outputFile.open(filename, std::ios::app);
   if (outputFile.is_open()) {
     outputFile << binary << std::endl;
     outputFile.close();

@@ -7,6 +7,7 @@ TEST(Parser, ParserInstructions) {
   EXPECT_EQ(Parser::parse_instruction("@LOOP      // goto LOOP "), "@LOOP");
   EXPECT_EQ(Parser::parse_instruction("    0;JMP"), "0;JMP");
   EXPECT_EQ(Parser::parse_instruction("AM= A+1  // AA"), "AM=A+1");
+  EXPECT_EQ(Parser::parse_instruction(" @R1"), "@R1");
 }
 
 TEST(Parser, Parser_A) {
@@ -37,7 +38,7 @@ TEST(Parser, Parser_C) {
 
   // Test 3
   EXPECT_EQ(test_3.dest,"");
-  EXPECT_EQ(test_3.comp,"");
+  EXPECT_EQ(test_3.comp,"0");
   EXPECT_EQ(test_3.jump,"JMP");
 
 
