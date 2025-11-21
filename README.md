@@ -7,7 +7,7 @@ It translates Hack assembly code (`.asm`) into machine code (`.hack`) following 
 Run the assembler with an input file:
 
 ```bash
-./hasm input.asm
+./hasm input.asm output.hack
 
 ```
 
